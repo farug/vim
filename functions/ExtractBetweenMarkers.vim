@@ -8,12 +8,13 @@ function! ExtractBetweenMarkers(input, output, start_marker, end_marker)
     " Loop to find all occurrences of start_marker and end_marker
     let start_line = 0
     let end_line = 0
+    let start_line_prev = 0
 
     while 1
         " Search for the start_marker
         let start_line = search('^' . a:start_marker . '$', 'n')
         " If no more start markers are found, break the loop
-        if start_line == 0
+        if start_line < start_line_prev
             break
         endif
 
@@ -27,6 +28,7 @@ function! ExtractBetweenMarkers(input, output, start_marker, end_marker)
 
         " Extract lines between start_line and end_line and append to output file
         execute start_line . ',' . end_line . 'w >> ' . a:output
+        let start_line_prev = start_line
     endwhile
 
     echo "Extracted all occurrences to " . a:output
